@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ghoomney - Admin Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #0a0a0a; color: #ffffff; }
+        .container { max-width: 1400px; margin: 0 auto; padding: 2rem; }
+        .header { background: linear-gradient(135deg, #1a1a2e, #0f0f23); padding: 1.5rem 2rem; border-radius: 20px; margin-bottom: 2rem; display: flex; justify-content: space-between; align-items: center; }
+        .header h1 { color: #c8a55b; }
+        .login-box { max-width: 400px; margin: 100px auto; background: #1a1a2e; padding: 2rem; border-radius: 20px; text-align: center; }
+        .login-box input { width: 100%; padding: 1rem; margin: 0.5rem 0; background: #0a0a0a; border: 1px solid #333; border-radius: 12px; color: white; }
+        .login-box button { background: #c8a55b; color: #1a1a2e; padding: 1rem; border: none; border-radius: 40px; font-weight: bold; cursor: pointer; width: 100%; }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
+        .stat-card { background: #1a1a2e; padding: 1.5rem; border-radius: 20px; text-align: center; }
+        .stat-card h3 { color: #888; margin-bottom: 0.5rem; }
+        .stat-card p { font-size: 2rem; font-weight: bold; color: #c8a55b; }
+        .section-card { background: #1a1a2e; border-radius: 20px; padding: 1.5rem; margin-bottom: 2rem; }
+        .section-card h2 { margin-bottom: 1rem; color: #c8a55b; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 1rem; text-align: left; border-bottom: 1px solid #333; }
+        th { color: #c8a55b; }
+        .btn-danger { background: #dc2626; color: white; border: none; padding: 5px 12px; border-radius: 8px; cursor: pointer; margin-right: 5px; }
+        .btn-success { background: #10b981; color: white; border: none; padding: 5px 12px; border-radius: 8px; cursor: pointer; margin-right: 5px; }
+        .btn-warning { background: #eab308; color: black; border: none; padding: 5px 12px; border-radius: 8px; cursor: pointer; margin-right: 5px; }
+        .status-badge { padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; display: inline-block; }
+        .status-paid { background: rgba(16,185,129,0.2); color: #10b981; }
+        .status-pending { background: rgba(234,179,8,0.2); color: #eab308; }
+        .status-cancelled { background: rgba(220,38,38,0.2); color: #ef4444; }
+        .hidden { display: none; }
+        .logout-btn { background: #dc2626; color: white; padding: 0.5rem 1rem; border: none; border-radius: 8px; cursor: pointer; }
+    </style>
+</head>
+<body>
+<div id="loginSection" class="login-box">
+    <h2 style="margin-bottom: 1rem;">Admin Login</h2>
+    <input type="text" id="adminUsername" placeholder="Username" value="ghoomney">
+    <input type="password" id="adminPassword" placeholder="Password" value="admin123">
+    <button onclick="adminLogin()">Login to Dashboard</button>
+    <p style="margin-top: 1rem; color: #888;"></p>
+</div>
+
+<div id="dashboardSection" class="container hidden">
+    <div class="header">
+        <h1><i class="fas fa-car"></i> Ghoomney Admin Dashboard</h1>
+        <button class="logout-btn" onclick="adminLogout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
+    </div>
+    <div id="dashboardContent"></div>
+</div>
+
+<script>
+    let isAdminLoggedIn = false;
+
+    function adminLogin() {
+        const username = document.getElementById('adminUsername').value;
+        const password = document.getElementById('adminPassword').value;
+        if (username === 'ghoomney' && password === 'admin123') {
+            isAdminLoggedIn = true;
+            localStorage.setItem('adminLoggedIn', 'true');
+            document.getElementById('loginSection').classList.add('hidden');
+            document.getElementById('dashboardSection').classList.remove('hidden');
+            loadDashboard();
+        } else {
+            alert('Invalid credentials!');
+        }
+    }
+
+    function adminLogout() {
+        isAdminLoggedIn = false;
+        localStorage.removeItem('adminLoggedIn');
+        document.getElementById('loginSection').classList.remove('hidden');
+        document.getElementById('dashboardSection').classList.add('hidden');
+    }
+
+    function loadDashboard() {
+        const users = JSON.parse(localStorage.getItem('users')) || [];
+        const bookings = JSON.parse(localStorage.getItem('bookings')) || [];
+        const vehicles = JSON.parse(localStorage.getItem('vehicles')) || [];
+        
+        const regularUsers = users.filter(u => u.role !== 'admin');
+        const totalRevenue = bookings.filter(b => b.payment_status === 'paid').reduce((sum, b) => sum + b.total_amount, 0);
+        
+        let html = `
+            <div class="stats-grid">
+                <div class="stat-card"><h3>Total Users</h3><p>${regularUsers.length}</p></div>
+                <div class="stat-card"><h3>Total Bookings</h3><p>${bookings.length}</p></div>
+                <div class="stat-card"><h3>Total Revenue</h3><p>NPR ${totalRevenue.toLocaleString()}</p></div>
+                <div class="stat-card"><h3>Vehicles</h3><p>${vehicles.length}</p></div>
+            </div>
+            
+            <div class="section-card">
+                <h2><i class="fas fa-users"></i> Manage Users</h2>
+                <table>
+                    <thead><tr><th>ID</th><th>Username</th><th>Email</th><th>Registered</th><th>Action</th></tr></thead>
+                    <tbody>`;
+        
+        regularUsers.forEach(user => {
+            html += `<tr>
+                <td>#${user.id}</td>
+                <td>${user.username}</td>
+                <td>${user.email}</td>
+                <td>${user.created_at || 'N/A'}</td>
+                <td><button class="btn-danger" onclick="deleteUser(${user.id})">Delete</button></td>
+            </tr>`;
+        });
+        
+        html += `</tbody></table></div>
+            <div class="section-card">
+                <h2><i class="fas fa-calendar-check"></i> Manage Bookings</h2>
+                <table>
+                    <thead><tr><th>ID</th><th>User</th><th>Vehicle</th><th>Date</th><th>Days</th><th>Total</th><th>Payment</th><th>Action</th></tr></thead>
+                    <tbody>`;
+        
+        bookings.forEach(booking => {
+            const user = users.find(u => u.id === booking.user_id);
+            const vehicle = vehicles.find(v => v.id === booking.vehicle_id);
+            const paymentStatus = booking.payment_status === 'paid' ? 'Paid' : 'Pending';
+            const paymentClass = booking.payment_status === 'paid' ? 'status-paid' : 'status-pending';
+            html += `<tr>
+                <td>#${booking.id}</td>
+                <td>${user?.username || 'Unknown'}</td>
+                <td>${vehicle?.name || 'Unknown'}</td>
+                <td>${booking.booking_date}</td>
+                <td>${booking.days}</td>
+                <td>NPR ${booking.total_amount}</td>
+                <td><span class="status-badge ${paymentClass}">${paymentStatus}</span></td>
+                <td>
+                    ${booking.payment_status !== 'paid' ? `<button class="btn-success" onclick="markAsPaid(${booking.id})">Mark Paid</button>` : ''}
+                    <button class="btn-danger" onclick="cancelBookingAdmin(${booking.id})">Cancel</button>
+                </td>
+            </tr>`;
+        });
+        
+        html += `</tbody></table></div>`;
+        document.getElementById('dashboardContent').innerHTML = html;
+    }
+
+    function deleteUser(userId) {
+        if (confirm('Delete this user? All their bookings will also be deleted.')) {
+            let users = JSON.parse(localStorage.getItem('users'));
+            let bookings = JSON.parse(localStorage.getItem('bookings'));
+            let ratings = JSON.parse(localStorage.getItem('ratings'));
+            users = users.filter(u => u.id !== userId);
+            bookings = bookings.filter(b => b.user_id !== userId);
+            ratings = ratings.filter(r => r.user_id !== userId);
+            localStorage.setItem('users', JSON.stringify(users));
+            localStorage.setItem('bookings', JSON.stringify(bookings));
+            localStorage.setItem('ratings', JSON.stringify(ratings));
+            loadDashboard();
+            alert('User deleted successfully!');
+        }
+    }
+
+    function markAsPaid(bookingId) {
+        let bookings = JSON.parse(localStorage.getItem('bookings'));
+        const booking = bookings.find(b => b.id === bookingId);
+        if (booking) {
+            booking.payment_status = 'paid';
+            booking.transaction_id = 'ADMIN_' + Date.now();
+            localStorage.setItem('bookings', JSON.stringify(bookings));
+            loadDashboard();
+            alert('Booking marked as paid!');
+        }
+    }
+
+    function cancelBookingAdmin(bookingId) {
+        if (confirm('Cancel this booking?')) {
+            let bookings = JSON.parse(localStorage.getItem('bookings'));
+            bookings = bookings.filter(b => b.id !== bookingId);
+            localStorage.setItem('bookings', JSON.stringify(bookings));
+            loadDashboard();
+            alert('Booking cancelled!');
+        }
+    }
+
+    if (localStorage.getItem('adminLoggedIn') === 'true') {
+        document.getElementById('loginSection').classList.add('hidden');
+        document.getElementById('dashboardSection').classList.remove('hidden');
+        loadDashboard();
+    }
+</script>
+</body>
+</html>

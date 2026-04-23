@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Ghoomney | Premium Vehicle Rental Nepal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #0a0a0a; color: #ffffff; }
+        :root { --primary: #c8a55b; --primary-dark: #b8923a; --dark: #0a0a0a; --dark-gray: #111111; --light-gray: #1a1a1a; --text-muted: #888888; }
+        
+        .header { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; padding: 1rem 5%; background: rgba(10,10,10,0.95); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(200,165,91,0.2); }
+        .nav-container { display: flex; justify-content: space-between; align-items: center; max-width: 1400px; margin: 0 auto; flex-wrap: wrap; gap: 1rem; }
+        .logo h1 { font-size: 1.8rem; font-weight: 700; }
+        .logo span { color: var(--primary); }
+        .logo p { font-size: 0.7rem; color: var(--text-muted); letter-spacing: 2px; }
+        .nav-links { display: flex; gap: 1.5rem; align-items: center; flex-wrap: wrap; }
+        .nav-links a { color: #e0e0e0; text-decoration: none; font-weight: 500; font-size: 0.9rem; transition: color 0.3s; cursor: pointer; }
+        .nav-links a:hover { color: var(--primary); }
+        .whatsapp-btn { display: flex; align-items: center; gap: 0.5rem; background: linear-gradient(135deg, #25D366, #128C7E); padding: 0.4rem 1rem; border-radius: 40px; text-decoration: none; color: white; font-weight: 600; font-size: 0.85rem; }
+        .admin-link { background: rgba(220,38,38,0.2); border: 1px solid rgba(220,38,38,0.5); color: #ef4444; padding: 0.4rem 1rem; border-radius: 30px; font-weight: 600; cursor: pointer; }
+        .auth-buttons { display: flex; gap: 0.8rem; }
+        .login-btn, .register-btn { padding: 0.4rem 1.2rem; border-radius: 30px; font-weight: 600; cursor: pointer; transition: all 0.3s; }
+        .login-btn { background: transparent; border: 1.5px solid var(--primary); color: var(--primary); }
+        .register-btn { background: var(--primary); border: none; color: var(--dark); }
+        .user-info { display: flex; align-items: center; gap: 1rem; background: rgba(200,165,91,0.1); padding: 0.3rem 1rem; border-radius: 40px; }
+        .logout-btn { background: rgba(220,38,38,0.2); border: none; color: #ef4444; padding: 0.3rem 1rem; border-radius: 30px; cursor: pointer; }
+        .hidden { display: none !important; }
+        
+        .hero { min-height: 100vh; background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%); display: flex; align-items: center; justify-content: space-between; padding: 0 5%; padding-top: 80px; }
+        .hero-content { max-width: 600px; }
+        .hero-badge { display: inline-block; background: rgba(200,165,91,0.15); padding: 0.5rem 1rem; border-radius: 30px; font-size: 0.8rem; color: var(--primary); margin-bottom: 1.5rem; }
+        .hero-content h1 { font-size: 4rem; font-weight: 800; line-height: 1.1; margin-bottom: 1.5rem; }
+        .hero-content h1 span { color: var(--primary); }
+        .hero-content p { color: var(--text-muted); font-size: 1rem; line-height: 1.6; margin-bottom: 2rem; }
+        .hero-buttons { display: flex; gap: 1rem; }
+        .btn-primary { background: var(--primary); color: var(--dark); border: none; padding: 1rem 2rem; border-radius: 40px; font-weight: 700; cursor: pointer; }
+        .btn-outline { background: transparent; border: 1.5px solid var(--primary); color: var(--primary); padding: 1rem 2rem; border-radius: 40px; font-weight: 700; cursor: pointer; }
+        .hero-image img { max-width: 500px; filter: drop-shadow(0 20px 40px rgba(0,0,0,0.3)); }
+        
+        .features { padding: 5rem 5%; background: var(--dark-gray); }
+        .section-header { text-align: center; margin-bottom: 3rem; }
+        .section-header .badge { display: inline-block; background: rgba(200,165,91,0.15); padding: 0.3rem 1rem; border-radius: 30px; font-size: 0.8rem; color: var(--primary); margin-bottom: 1rem; }
+        .section-header h2 { font-size: 2.5rem; font-weight: 700; letter-spacing: -1px; }
+        .section-header h2 span { color: var(--primary); }
+        .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; max-width: 1200px; margin: 0 auto; }
+        .feature-card { background: var(--light-gray); padding: 2rem; border-radius: 20px; text-align: center; transition: all 0.3s; border: 1px solid rgba(255,255,255,0.05); }
+        .feature-card:hover { transform: translateY(-5px); border-color: rgba(200,165,91,0.3); }
+        .feature-icon { width: 70px; height: 70px; background: rgba(200,165,91,0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem; }
+        .feature-icon i { font-size: 2rem; color: var(--primary); }
+        
+        .gallery { padding: 5rem 5%; background: var(--dark); }
+        .search-container { max-width: 600px; margin: 0 auto 3rem auto; }
+        .search-box { display: flex; gap: 0.5rem; background: var(--light-gray); border-radius: 60px; padding: 0.3rem; border: 1px solid rgba(200,165,91,0.2); }
+        .search-box input { flex: 1; background: transparent; border: none; padding: 1rem 1.5rem; color: white; font-size: 1rem; outline: none; }
+        .search-box input::placeholder { color: var(--text-muted); }
+        .search-box button { background: var(--primary); border: none; padding: 0.8rem 2rem; border-radius: 50px; color: var(--dark); font-weight: 600; cursor: pointer; }
+        .filter-buttons { display: flex; justify-content: center; gap: 0.8rem; margin-top: 1rem; flex-wrap: wrap; }
+        .filter-btn { background: transparent; border: 1px solid rgba(200,165,91,0.3); padding: 0.4rem 1rem; border-radius: 30px; color: var(--text-muted); cursor: pointer; transition: all 0.3s; font-size: 0.8rem; }
+        .filter-btn:hover, .filter-btn.active { background: var(--primary); color: var(--dark); border-color: var(--primary); }
+        .results-count { text-align: center; margin-top: 1rem; color: var(--text-muted); font-size: 0.9rem; }
+        
+        .vehicles-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(330px, 1fr)); gap: 2rem; max-width: 1400px; margin: 0 auto; }
+        .vehicle-card { background: var(--light-gray); border-radius: 20px; overflow: hidden; transition: all 0.4s ease; border: 1px solid rgba(255,255,255,0.05); }
+        .vehicle-card:hover { transform: translateY(-10px); border-color: rgba(200,165,91,0.3); }
+        .vehicle-image { height: 220px; background-size: cover; background-position: center; position: relative; }
+        .vehicle-price { position: absolute; top: 15px; right: 15px; background: rgba(0,0,0,0.8); backdrop-filter: blur(5px); padding: 0.4rem 0.8rem; border-radius: 30px; font-weight: 700; font-size: 0.85rem; }
+        .vehicle-price span { color: var(--primary); }
+        .vehicle-content { padding: 1.2rem; }
+        .vehicle-title { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; }
+        .vehicle-title h3 { font-size: 1.2rem; font-weight: 700; }
+        .rating { color: var(--primary); font-size: 0.8rem; }
+        .vehicle-details { display: flex; gap: 1rem; margin: 0.8rem 0; color: var(--text-muted); font-size: 0.75rem; }
+        .vehicle-details i { color: var(--primary); margin-right: 0.3rem; }
+        .rating-stars { display: flex; gap: 4px; margin: 0.8rem 0; align-items: center; }
+        .star { font-size: 0.9rem; cursor: pointer; color: #444; transition: 0.2s; }
+        .star.active { color: var(--primary); }
+        .book-btn { width: 100%; background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: var(--dark); border: none; padding: 0.7rem; border-radius: 40px; font-weight: 700; cursor: pointer; margin-top: 0.8rem; }
+        
+        .booking-section { padding: 5rem 5%; background: var(--dark-gray); }
+        .booking-container { max-width: 600px; margin: 0 auto; background: var(--light-gray); border-radius: 24px; padding: 2rem; border: 1px solid rgba(255,255,255,0.05); }
+        .form-group { margin-bottom: 1.5rem; }
+        .form-group label { display: block; margin-bottom: 0.5rem; font-weight: 500; color: var(--text-muted); }
+        .form-group input, .form-group select { width: 100%; padding: 1rem; background: var(--dark); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; color: white; font-size: 1rem; }
+        
+        .bookings-section { padding: 5rem 5%; background: var(--dark); }
+        .bookings-table { background: var(--light-gray); border-radius: 20px; padding: 1rem; overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 0.8rem; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        th { color: var(--primary); font-weight: 600; }
+        .status-badge { padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; display: inline-block; }
+        .status-confirmed { background: rgba(16,185,129,0.2); color: #10b981; }
+        .status-pending { background: rgba(234,179,8,0.2); color: #eab308; }
+        .btn-cancel { background: rgba(220,38,38,0.2); border: none; color: #ef4444; padding: 5px 12px; border-radius: 20px; cursor: pointer; }
+        .btn-pay { background: rgba(16,185,129,0.2); border: none; color: #10b981; padding: 5px 12px; border-radius: 20px; cursor: pointer; margin-right: 5px; }
+        
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); backdrop-filter: blur(10px); z-index: 1100; justify-content: center; align-items: center; }
+        .modal-content { background: var(--light-gray); max-width: 450px; width: 90%; border-radius: 24px; padding: 2rem; border: 1px solid rgba(200,165,91,0.3); }
+        .modal-header { text-align: center; margin-bottom: 1.5rem; }
+        .modal-header i { font-size: 3rem; color: var(--primary); }
+        .modal-header h2 { font-size: 1.5rem; }
+        .input-group { margin-bottom: 1rem; }
+        .input-group input { width: 100%; padding: 1rem; background: var(--dark); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; color: white; }
+        .modal-btn { width: 100%; padding: 1rem; border-radius: 40px; font-weight: 600; cursor: pointer; margin-top: 1rem; }
+        .modal-btn-login { background: var(--primary); color: var(--dark); border: none; }
+        .modal-footer { text-align: center; margin-top: 1rem; padding-top: 1rem; border-top: 1px solid rgba(255,255,255,0.1); }
+        .modal-footer a { color: var(--primary); cursor: pointer; }
+        .error-msg { color: #ef4444; font-size: 0.8rem; text-align: center; margin-top: 0.5rem; }
+        
+        .toast-message { position: fixed; bottom: 30px; right: 30px; background: var(--light-gray); padding: 12px 24px; border-radius: 50px; z-index: 2000; display: flex; align-items: center; gap: 10px; border-left: 3px solid; }
+        .toast-message.success { border-left-color: #10b981; }
+        .toast-message.error { border-left-color: #ef4444; }
+        footer { background: var(--dark-gray); padding: 2rem; text-align: center; margin-top: 2rem; }
+        
+        @media (max-width: 768px) {
+            .hero { flex-direction: column; text-align: center; padding-top: 120px; }
+            .hero-content h1 { font-size: 2.5rem; }
+            .hero-buttons { justify-content: center; }
+            .hero-image img { max-width: 280px; margin-top: 2rem; }
+            .vehicles-grid { grid-template-columns: 1fr; }
+            .nav-links { justify-content: center; }
+            .filter-btn { padding: 0.2rem 0.8rem; font-size: 0.7rem; }
+        }
+        .heap-visualization {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: var(--light-gray);
+    padding: 2rem;
+    border-radius: 20px;
+    z-index: 2000;
+    max-width: 90%;
+    max-height: 80vh;
+    overflow: auto;
+    border: 2px solid var(--primary);
+}
+
+.heap-tree {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: monospace;
+}
+
+.heap-level {
+    display: flex;
+    justify-content: center;
+    margin: 10px 0;
+}
+
+.heap-node {
+    background: var(--primary-dark);
+    color: white;
+    padding: 8px 15px;
+    margin: 0 10px;
+    border-radius: 8px;
+    min-width: 120px;
+    text-align: center;
+}
+
+.heap-node.highlight {
+    background: var(--primary);
+    color: var(--dark);
+    border: 2px solid white;
+}
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <div class="nav-container">
+        <div class="logo">
+            <h1>Ghoomney<span>.</span></h1>
+            <p>PREMIUM RENTAL</p>
+        </div>
+        <div class="nav-links">
+            <a onclick="showSection('home')">Home</a>
+            <a onclick="showSection('gallery')">Vehicles</a>
+            <a onclick="showSection('booking')">Book Now</a>
+            <a onclick="showSection('myBookings')">My Bookings</a>
+            <a href="https://wa.me/9779765282293?text=Hello! Need a rental car" target="_blank" class="whatsapp-btn"><i class="fab fa-whatsapp"></i><span> Help</span></a>
+            <a href="admin.html" class="admin-link">Admin</a>
+            <div id="authButtons" class="auth-buttons">
+                <button onclick="showLoginModal()" class="login-btn">Login</button>
+                <button onclick="showRegisterModal()" class="register-btn">Register</button>
+            </div>
+            <div id="userInfo" class="user-info hidden">
+                <span id="usernameDisplay"></span>
+                <button onclick="logout()" class="logout-btn">Logout</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="toastMessage" class="toast-message" style="display: none;"></div>
+
+<!-- Sections -->
+<div id="homeSection">
+    <div class="hero">
+        <div class="hero-content">
+            <span class="hero-badge">PREMIUM VEHICLE RENTAL</span>
+            <h1>Explore Nepal with <span>Ghoomney</span></h1>
+            <p>Experience the finest collection of premium vehicles. From luxury sedans to powerful SUVs, choose your perfect ride.</p>
+            <div class="hero-buttons">
+                <button onclick="showSection('gallery')" class="btn-primary">Explore Collection →</button>
+                <button onclick="showSection('booking')" class="btn-outline">Rent Now</button>
+            </div>
+        </div>
+        <div class="hero-image">
+            <img src="https://images.unsplash.com/photo-1580273916550-e323be2ae537?w=500" alt="Luxury Car">
+        </div>
+    </div>
+    <div class="features">
+        <div class="section-header"><span class="badge">WHY CHOOSE US</span><h2>Premium <span>Services</span></h2></div>
+        <div class="features-grid">
+            <div class="feature-card"><div class="feature-icon"><i class="fas fa-car"></i></div><h3>Premium Fleet</h3><p>Wide selection of luxury vehicles</p></div>
+            <div class="feature-card"><div class="feature-icon"><i class="fas fa-tag"></i></div><h3>Best Prices</h3><p>Competitive rates, no hidden charges</p></div>
+            <div class="feature-card"><div class="feature-icon"><i class="fas fa-headset"></i></div><h3>24/7 Support</h3><p>Round-the-clock assistance</p></div>
+            <div class="feature-card"><div class="feature-icon"><i class="fas fa-shield-alt"></i></div><h3>Safe & Secure</h3><p>Fully insured vehicles</p></div>
+        </div>
+    </div>
+</div>
+
+<div id="gallerySection" class="gallery hidden">
+    <div class="section-header"><span class="badge">OUR FLEET</span><h2>Choose Your <span>Premium Ride</span></h2></div>
+    <div class="search-container">
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="🔍 Search by name, type, or fuel..." onkeyup="filterVehicles()">
+            <button onclick="filterVehicles()"><i class="fas fa-search"></i> Search</button>
+        </div>
+        <div class="filter-buttons">
+            <button class="filter-btn active" onclick="filterByCategory('all')">All</button>
+            <button class="filter-btn" onclick="filterByCategory('Sedan')">Sedan</button>
+            <button class="filter-btn" onclick="filterByCategory('SUV')">SUV</button>
+            <button class="filter-btn" onclick="filterByCategory('Luxury')">Luxury</button>
+            <button class="filter-btn" onclick="filterByCategory('Hatchback')">Hatchback</button>
+            <button class="filter-btn" onclick="filterByCategory('Offroader')">Offroader</button>
+            <button class="filter-btn" onclick="filterByCategory('Electric')">Electric</button>
+        </div>
+        <div class="results-count" id="resultsCount"></div>
+    </div>
+    <div id="vehiclesContainer" class="vehicles-grid"></div>
+</div>
+
+<div id="bookingSection" class="booking-section hidden">
+    <div class="section-header"><span class="badge">BOOK NOW</span><h2>Reserve Your <span>Dream Car</span></h2></div>
+    <div class="booking-container">
+        <form id="bookingForm">
+            <div class="form-group"><label>Select Vehicle</label><select id="bookVehicleSelect" required></select></div>
+            <div class="form-group"><label>Pickup Date</label><input type="date" id="pickupDate" required></div>
+            <div class="form-group"><label>Number of Days</label><input type="number" id="days" min="1" value="1"></div>
+            <button type="submit" class="btn-primary" style="width:100%">Proceed to Payment →</button>
+        </form>
+        <div id="bookingMsg"></div>
+    </div>
+</div>
+
+<div id="myBookingsSection" class="bookings-section hidden">
+    <div class="section-header"><span class="badge">YOUR RIDES</span><h2>My <span>Booking History</span></h2></div>
+    <div class="bookings-table"><div id="userBookingsContainer"></div></div>
+</div>
+
+<!-- Modals -->
+<div id="loginModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header"><i class="fas fa-key"></i><h2>Welcome Back</h2><p>Login to your account</p></div>
+        <div class="input-group"><input type="text" id="loginUsername" placeholder="Username or Email"></div>
+        <div class="input-group"><input type="password" id="loginPassword" placeholder="Password"></div>
+        <button onclick="userLogin()" class="modal-btn modal-btn-login">Login</button>
+        <div id="loginError" class="error-msg"></div>
+        <div class="modal-footer"><p>Don't have an account? <a onclick="closeModal('loginModal'); showRegisterModal();">Register here</a></p></div>
+        <button onclick="closeModal('loginModal')" style="margin-top:1rem; width:100%; padding:0.8rem; background:rgba(255,255,255,0.1); border:none; border-radius:40px; cursor:pointer;">Cancel</button>
+    </div>
+</div>
+
+<div id="registerModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header"><i class="fas fa-user-plus"></i><h2>Create Account</h2><p>Join Ghoomney Premium</p></div>
+        <div class="input-group"><input type="text" id="regUsername" placeholder="Username"></div>
+        <div class="input-group"><input type="email" id="regEmail" placeholder="Email Address"></div>
+        <div class="input-group"><input type="password" id="regPassword" placeholder="Password"></div>
+        <div class="input-group"><input type="password" id="regConfirmPassword" placeholder="Confirm Password"></div>
+        <button onclick="register()" class="modal-btn modal-btn-register">Register Now</button>
+        <div id="registerError" class="error-msg"></div>
+        <div class="modal-footer"><p>Already have an account? <a onclick="closeModal('registerModal'); showLoginModal();">Login here</a></p></div>
+        <button onclick="closeModal('registerModal')" style="margin-top:1rem; width:100%; padding:0.8rem; background:rgba(255,255,255,0.1); border:none; border-radius:40px; cursor:pointer;">Cancel</button>
+    </div>
+</div>
+
+<script>
+    // ========== VEHICLES DATA (Fixed & Loaded Fresh) ==========
+    const vehicleData = [
+        { id: 1, name: "Toyota Camry", type: "Sedan", price: 3500, rating: 4.8, seats: 4, fuel: "Petrol", trans: "Auto", img: "https://images.unsplash.com/photo-1621007947382-bb3c3994e3fb?w=500" },
+        { id: 2, name: "Hyundai Creta", type: "SUV", price: 5500, rating: 4.7, seats: 5, fuel: "Diesel", trans: "Manual", img: "https://images.unsplash.com/photo-1556189250-72ba954cfc2b?w=500" },
+        { id: 3, name: "Honda City", type: "Sedan", price: 3200, rating: 4.5, seats: 4, fuel: "Petrol", trans: "Auto", img: "https://images.unsplash.com/photo-1555215695-3004980ad54e?w=500" },
+        { id: 4, name: "Mahindra Thar", type: "Offroader", price: 7000, rating: 4.9, seats: 4, fuel: "Diesel", trans: "Manual", img: "https://images.unsplash.com/photo-1533473359331-8405c1ab1d7c?w=500" },
+        { id: 5, name: "BMW X1", type: "Luxury", price: 12000, rating: 4.9, seats: 5, fuel: "Petrol", trans: "Auto", img: "https://images.unsplash.com/photo-1555215695-3004980ad54e?w=500" },
+        { id: 6, name: "Audi Q3", type: "Luxury", price: 13000, rating: 5.0, seats: 5, fuel: "Petrol", trans: "Auto", img: "https://images.unsplash.com/photo-1606664515524-8b9b27c0c1b7?w=500" },
+        { id: 7, name: "Mercedes C-Class", type: "Luxury", price: 15000, rating: 4.9, seats: 4, fuel: "Petrol", trans: "Auto", img: "https://images.unsplash.com/photo-1617814076367-b759c7d7e738?w=500" },
+        { id: 8, name: "Ford Mustang", type: "Sports", price: 18000, rating: 4.8, seats: 4, fuel: "Petrol", trans: "Auto", img: "https://images.unsplash.com/photo-1584345604476-8ec5e12e42dd?w=500" },
+        { id: 9, name: "Tesla Model 3", type: "Electric", price: 16000, rating: 4.9, seats: 5, fuel: "Electric", trans: "Auto", img: "https://images.unsplash.com/photo-1560958089-b8a1929cea89?w=500" },
+        { id: 10, name: "Tata Nexon", type: "SUV", price: 4000, rating: 4.4, seats: 5, fuel: "Diesel", trans: "Manual", img: "https://images.unsplash.com/photo-1533473359331-8405c1ab1d7c?w=500" },
+        { id: 11, name: "Maruti Swift", type: "Hatchback", price: 2500, rating: 4.3, seats: 4, fuel: "Petrol", trans: "Manual", img: "https://images.unsplash.com/photo-1621007947382-bb3c3994e3fb?w=500" },
+        { id: 12, name: "Hyundai i10", type: "Hatchback", price: 2200, rating: 4.2, seats: 4, fuel: "Petrol", trans: "Manual", img: "https://images.unsplash.com/photo-1556189250-72ba954cfc2b?w=500" },
+        { id: 13, name: "Kia Seltos", type: "SUV", price: 5000, rating: 4.6, seats: 5, fuel: "Petrol", trans: "Auto", img: "https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?w=500" },
+        { id: 14, name: "MG Hector", type: "SUV", price: 6000, rating: 4.5, seats: 5, fuel: "Petrol", trans: "Auto", img: "https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?w=500" },
+        { id: 15, name: "Toyota Fortuner", type: "SUV", price: 9500, rating: 4.9, seats: 7, fuel: "Diesel", trans: "Auto", img: "https://images.unsplash.com/photo-1621007947382-bb3c3994e3fb?w=500" },
+        { id: 16, name: "Hyundai Tucson", type: "SUV", price: 6500, rating: 4.6, seats: 5, fuel: "Diesel", trans: "Auto", img: "https://images.unsplash.com/photo-1556189250-72ba954cfc2b?w=500" },
+        { id: 17, name: "Honda CR-V", type: "SUV", price: 7000, rating: 4.7, seats: 5, fuel: "Petrol", trans: "Auto", img: "https://images.unsplash.com/photo-1555215695-3004980ad54e?w=500" },
+        { id: 18, name: "Ford Endeavour", type: "SUV", price: 8500, rating: 4.7, seats: 7, fuel: "Diesel", trans: "Auto", img: "https://images.unsplash.com/photo-1556189250-72ba954cfc2b?w=500" },
+        { id: 19, name: "Suzuki Ertiga", type: "MPV", price: 3800, rating: 4.3, seats: 7, fuel: "Petrol", trans: "Manual", img: "https://images.unsplash.com/photo-1621007947382-bb3c3994e3fb?w=500" },
+        { id: 20, name: "Renault Kwid", type: "Hatchback", price: 2000, rating: 4.1, seats: 4, fuel: "Petrol", trans: "Manual", img: "https://images.unsplash.com/photo-1555215695-3004980ad54e?w=500" }
+    ];
+
+    // Force fresh load of vehicles (Fix for missing vehicles)
+    localStorage.setItem('vehicles', JSON.stringify(vehicleData));
+    
+    if (!localStorage.getItem('users')) localStorage.setItem('users', JSON.stringify([{ id: 1, username: "ghoomney", email: "admin@ghoomney.com", password: "admin123", role: "admin" }]));
+    if (!localStorage.getItem('bookings')) localStorage.setItem('bookings', JSON.stringify([]));
+    if (!localStorage.getItem('ratings')) localStorage.setItem('ratings', JSON.stringify([]));
+    
+    let nextBookingId = JSON.parse(localStorage.getItem('bookings')).length + 1;
+    let currentUser = JSON.parse(localStorage.getItem('currentUser')) || null;
+    let currentFilter = 'all';
+    
+    function showToast(msg, type) {
+        const toast = document.getElementById('toastMessage');
+        toast.innerHTML = `<i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'}"></i> ${msg}`;
+        toast.className = `toast-message ${type}`;
+        toast.style.display = 'flex';
+        setTimeout(() => toast.style.display = 'none', 3000);
+    }
+    
+    function checkLoginStatus() {
+        if (currentUser) {
+            document.getElementById('authButtons').classList.add('hidden');
+            document.getElementById('userInfo').classList.remove('hidden');
+            document.getElementById('usernameDisplay').innerHTML = '<i class="fas fa-user-circle"></i> ' + currentUser.username;
+        }
+    }
+    
+    function userLogin() {
+        const username = document.getElementById('loginUsername').value;
+        const password = document.getElementById('loginPassword').value;
+        const users = JSON.parse(localStorage.getItem('users'));
+        const user = users.find(u => (u.username === username || u.email === username) && u.password === password);
+        if (user) {
+            localStorage.setItem('currentUser', JSON.stringify(user));
+            currentUser = user;
+            checkLoginStatus();
+            closeModal('loginModal');
+            showToast('Welcome back!', 'success');
+            filterVehicles();
+        } else {
+            document.getElementById('loginError').innerHTML = '❌ Invalid credentials';
+        }
+    }
+    
+    function register() {
+        const username = document.getElementById('regUsername').value;
+        const email = document.getElementById('regEmail').value;
+        const pwd = document.getElementById('regPassword').value;
+        const cpwd = document.getElementById('regConfirmPassword').value;
+        if (!username || !email || !pwd) { document.getElementById('registerError').innerHTML = '❌ Fill all fields'; return; }
+        if (!email.includes('@')) { document.getElementById('registerError').innerHTML = '❌ Invalid email'; return; }
+        if (pwd !== cpwd) { document.getElementById('registerError').innerHTML = '❌ Passwords do not match'; return; }
+        const users = JSON.parse(localStorage.getItem('users'));
+        if (users.find(u => u.username === username)) { document.getElementById('registerError').innerHTML = '❌ Username exists'; return; }
+        const newUser = { id: users.length + 1, username, email, password: pwd, role: 'user' };
+        users.push(newUser);
+        localStorage.setItem('users', JSON.stringify(users));
+        closeModal('registerModal');
+        showToast('Registered! Please login.', 'success');
+        showLoginModal();
+    }
+    
+    function logout() {
+        localStorage.removeItem('currentUser');
+        currentUser = null;
+        location.reload();
+    }
+    
+    function rateVehicle(vehicleId, rating) {
+        if (!currentUser) { showToast('Login to rate', 'error'); showLoginModal(); return; }
+        let ratings = JSON.parse(localStorage.getItem('ratings'));
+        ratings = ratings.filter(r => !(r.user_id === currentUser.id && r.vehicle_id === vehicleId));
+        ratings.push({ user_id: currentUser.id, vehicle_id: vehicleId, rating });
+        localStorage.setItem('ratings', JSON.stringify(ratings));
+        
+        let vehicles = JSON.parse(localStorage.getItem('vehicles'));
+        let vRatings = ratings.filter(r => r.vehicle_id === vehicleId);
+        let avg = vRatings.length ? (vRatings.reduce((s, r) => s + r.rating, 0) / vRatings.length) : 0;
+        let vehicle = vehicles.find(v => v.id === vehicleId);
+        vehicle.rating = Math.round(avg * 10) / 10;
+        localStorage.setItem('vehicles', JSON.stringify(vehicles));
+        filterVehicles();
+        showToast('Rated!', 'success');
+    }
+    
+    function filterVehicles() {
+        let vehicles = JSON.parse(localStorage.getItem('vehicles'));
+        let search = document.getElementById('searchInput').value.toLowerCase();
+        let filtered = vehicles.filter(v => 
+            (currentFilter === 'all' || v.type === currentFilter) &&
+            (v.name.toLowerCase().includes(search) || v.type.toLowerCase().includes(search) || v.fuel.toLowerCase().includes(search))
+        );
+        displayVehicles(filtered);
+        document.getElementById('resultsCount').innerHTML = `Found ${filtered.length} vehicles`;
+    }
+    
+    function filterByCategory(cat) {
+        currentFilter = cat;
+        document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+        event.target.classList.add('active');
+        filterVehicles();
+    }
+    
+    function displayVehicles(vehiclesList) {
+        let ratings = JSON.parse(localStorage.getItem('ratings')) || [];
+        let container = document.getElementById('vehiclesContainer');
+        if (!container) return;
+        container.innerHTML = '';
+        vehiclesList.sort((a,b) => b.rating - a.rating).forEach(v => {
+            let userRating = ratings.find(r => r.user_id === currentUser?.id && r.vehicle_id === v.id)?.rating || 0;
+            let stars = '';
+            for (let i=1; i<=5; i++) stars += `<i class="star ${i <= userRating ? 'active' : ''}" onclick="rateVehicle(${v.id}, ${i})">★</i>`;
+            container.innerHTML += `
+                <div class="vehicle-card">
+                    <div class="vehicle-image" style="background-image: url('${v.img}');"><div class="vehicle-price">NPR <span>${v.price}</span>/day</div></div>
+                    <div class="vehicle-content">
+                        <div class="vehicle-title"><h3>${v.name}</h3><span class="rating"><i class="fas fa-star"></i> ${v.rating}</span></div>
+                        <div class="vehicle-details"><span><i class="fas fa-users"></i> ${v.seats} Seats</span><span><i class="fas fa-gas-pump"></i> ${v.fuel}</span><span><i class="fas fa-cog"></i> ${v.trans}</span></div>
+                        <div class="rating-stars">${stars}<span class="rating-text">Rate</span></div>
+                        <button class="book-btn" onclick="bookNow(${v.id})">Rent Now →</button>
+                    </div>
+                </div>`;
+        });
+    }
+    
+    function renderBookingDropdown() {
+        let vehicles = JSON.parse(localStorage.getItem('vehicles'));
+        let select = document.getElementById('bookVehicleSelect');
+        if (select) {
+            select.innerHTML = '<option value="">Select a vehicle</option>';
+            vehicles.forEach(v => select.innerHTML += `<option value="${v.id}">${v.name} - NPR ${v.price}/day (${v.seats} seats)</option>`);
+        }
+    }
+    
+    function bookNow(id) {
+        if (!currentUser) { showToast('Login to book', 'error'); showLoginModal(); return; }
+        showSection('booking');
+        setTimeout(() => document.getElementById('bookVehicleSelect').value = id, 100);
+    }
+    
+    // Fixed Date Validation
+    function setMinDate() {
+        let today = new Date();
+        let yyyy = today.getFullYear();
+        let mm = String(today.getMonth() + 1).padStart(2, '0');
+        let dd = String(today.getDate()).padStart(2, '0');
+        document.getElementById('pickupDate').setAttribute('min', yyyy + '-' + mm + '-' + dd);
+    }
+    
+    document.getElementById('bookingForm').addEventListener('submit', (e) => {
+        e.preventDefault();
+        if (!currentUser) { showToast('Login to book', 'error'); showLoginModal(); return; }
+        
+        let vehicleId = parseInt(document.getElementById('bookVehicleSelect').value);
+        let bookingDate = document.getElementById('pickupDate').value;
+        let days = parseInt(document.getElementById('days').value);
+        if (!vehicleId || !bookingDate) { showToast('Fill all fields', 'error'); return; }
+        
+        // Strict date check
+        let selected = new Date(bookingDate);
+        let today = new Date();
+        today.setHours(0, 0, 0, 0);
+        if (selected < today) { showToast('❌ Cannot book past dates!', 'error'); return; }
+        
+        let vehicles = JSON.parse(localStorage.getItem('vehicles'));
+        let vehicle = vehicles.find(v => v.id === vehicleId);
+        let total = vehicle.price * days;
+        let bookings = JSON.parse(localStorage.getItem('bookings'));
+        let newBooking = { id: nextBookingId++, user_id: currentUser.id, vehicle_id: vehicleId, booking_date: bookingDate, days, total_amount: total, payment_status: 'pending' };
+        bookings.push(newBooking);
+        localStorage.setItem('bookings', JSON.stringify(bookings));
+        localStorage.setItem('currentPayment', JSON.stringify({ bookingId: newBooking.id, amount: total, vehicleName: vehicle.name }));
+        window.location.href = 'payment.html';
+    });
+    
+    function loadUserBookings() {
+        if (!currentUser) { document.getElementById('userBookingsContainer').innerHTML = '<p>Login to view bookings</p>'; return; }
+        let bookings = JSON.parse(localStorage.getItem('bookings'));
+        let vehicles = JSON.parse(localStorage.getItem('vehicles'));
+        let myBookings = bookings.filter(b => b.user_id === currentUser.id);
+        if (myBookings.length === 0) { document.getElementById('userBookingsContainer').innerHTML = '<p>No bookings yet</p>'; return; }
+        let html = `</td><thead><tr><th>Vehicle</th><th>Date</th><th>Days</th><th>Total</th><th>Payment</th><th>Action</th></tr></thead><tbody>`;
+        myBookings.forEach(b => {
+            let v = vehicles.find(v => v.id === b.vehicle_id);
+            html += `<tr><td>${v.name}</td><td>${b.booking_date}</td><td>${b.days}</td><td>NPR ${b.total_amount}</td><td><span class="status-badge status-pending">Pending</span></td><td><button class="btn-pay" onclick="goToPayment(${b.id}, ${b.total_amount})">Pay Now</button><button class="btn-cancel" onclick="cancelBooking(${b.id})">Cancel</button></td></tr>`;
+        });
+        html += `</tbody></table>`;
+        document.getElementById('userBookingsContainer').innerHTML = html;
+    }
+    
+    function goToPayment(id, amount) {
+        localStorage.setItem('currentPayment', JSON.stringify({ bookingId: id, amount: amount }));
+        window.location.href = 'payment.html';
+    }
+    
+    function cancelBooking(id) {
+        if (confirm('Cancel booking?')) {
+            let bookings = JSON.parse(localStorage.getItem('bookings'));
+            bookings = bookings.filter(b => b.id !== id);
+            localStorage.setItem('bookings', JSON.stringify(bookings));
+            loadUserBookings();
+            showToast('Cancelled!', 'success');
+        }
+    }
+    
+    function showSection(section) {
+        document.getElementById('homeSection').classList.add('hidden');
+        document.getElementById('gallerySection').classList.add('hidden');
+        document.getElementById('bookingSection').classList.add('hidden');
+        document.getElementById('myBookingsSection').classList.add('hidden');
+        if (section === 'home') document.getElementById('homeSection').classList.remove('hidden');
+        if (section === 'gallery') { document.getElementById('gallerySection').classList.remove('hidden'); filterVehicles(); }
+        if (section === 'booking') { document.getElementById('bookingSection').classList.remove('hidden'); renderBookingDropdown(); setMinDate(); }
+        if (section === 'myBookings') { document.getElementById('myBookingsSection').classList.remove('hidden'); loadUserBookings(); }
+    }
+    
+    function showLoginModal() { document.getElementById('loginModal').style.display = 'flex'; }
+    function showRegisterModal() { document.getElementById('registerModal').style.display = 'flex'; }
+    function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+    window.onclick = (e) => { if (e.target.classList.contains('modal')) e.target.style.display = 'none'; };
+    
+    checkLoginStatus();
+    filterVehicles();
+    showSection('home');
+    // ========== MAX HEAP ALGORITHM IMPLEMENTATION ==========
+
+class MaxHeap {
+    constructor() {
+        this.heap = [];
+    }
+    
+    // Insert a vehicle into the heap
+    insert(vehicle) {
+        this.heap.push(vehicle);
+        this.bubbleUp(this.heap.length - 1);
+    }
+    
+    // Maintain heap property (parent > children)
+    bubbleUp(index) {
+        while (index > 0) {
+            let parent = Math.floor((index - 1) / 2);
+            if (this.heap[parent].rating >= this.heap[index].rating) {
+                break;
+            }
+            // Swap if child rating is higher
+            [this.heap[parent], this.heap[index]] = [this.heap[index], this.heap[parent]];
+            index = parent;
+        }
+    }
+    
+    // Extract maximum rating vehicle
+    extractMax() {
+        if (this.heap.length === 0) return null;
+        const max = this.heap[0];
+        const last = this.heap.pop();
+        if (this.heap.length > 0) {
+            this.heap[0] = last;
+            this.sinkDown(0);
+        }
+        return max;
+    }
+    
+    // Maintain heap property from top to bottom
+    sinkDown(index) {
+        let length = this.heap.length;
+        while (true) {
+            let left = 2 * index + 1;
+            let right = 2 * index + 2;
+            let swap = null;
+            
+            if (left < length && this.heap[left].rating > this.heap[index].rating) {
+                swap = left;
+            }
+            if (right < length) {
+                let compareRating = swap === null ? this.heap[index].rating : this.heap[left].rating;
+                if (this.heap[right].rating > compareRating) {
+                    swap = right;
+                }
+            }
+            if (swap === null) break;
+            [this.heap[index], this.heap[swap]] = [this.heap[swap], this.heap[index]];
+            index = swap;
+        }
+    }
+    
+    // Get vehicles sorted by rating using Max Heap
+    getSortedVehicles() {
+        let tempHeap = new MaxHeap();
+        tempHeap.heap = [...this.heap];
+        let sorted = [];
+        while (tempHeap.heap.length) {
+            sorted.push(tempHeap.extractMax());
+        }
+        return sorted;
+    }
+    
+    // Display heap structure visually
+    displayHeapStructure() {
+        let levels = [];
+        let level = 0;
+        let index = 0;
+        while (index < this.heap.length) {
+            let levelSize = Math.pow(2, level);
+            let levelNodes = [];
+            for (let i = 0; i < levelSize && index < this.heap.length; i++) {
+                levelNodes.push(`${this.heap[index].name} (${this.heap[index].rating})`);
+                index++;
+            }
+            levels.push(levelNodes);
+            level++;
+        }
+        return levels;
+    }
+}
+
+// Function to show Max Heap visualization
+function showMaxHeapVisualization() {
+    const vehicles = JSON.parse(localStorage.getItem('vehicles'));
+    const heap = new MaxHeap();
+    vehicles.forEach(v => heap.insert(v));
+    
+    const sorted = heap.getSortedVehicles();
+    const levels = heap.displayHeapStructure();
+    
+    let html = `
+        <div style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: var(--light-gray); padding: 2rem; border-radius: 20px; z-index: 2000; max-width: 90%; max-height: 80vh; overflow: auto; border: 2px solid var(--primary);">
+            <h2 style="color: var(--primary); margin-bottom: 1rem;">📊 Max Heap Algorithm - Vehicle Ranking</h2>
+            
+            <div style="margin-bottom: 1.5rem;">
+                <h3>Heap Tree Structure (Parent > Children)</h3>
+                <div style="background: var(--dark); padding: 1rem; border-radius: 10px; font-family: monospace; font-size: 0.8rem;">`;
+    
+    levels.forEach((level, i) => {
+        html += `<div style="margin: 5px 0; text-align: center;">`;
+        level.forEach(node => {
+            html += `<span style="display: inline-block; background: var(--primary-dark); color: white; padding: 5px 10px; margin: 0 5px; border-radius: 8px;">${node}</span>`;
+        });
+        html += `</div>`;
+    });
+    
+    html += `
+                </div>
+            </div>
+            
+            <div style="margin-bottom: 1.5rem;">
+                <h3>📋 Sorted Order (Highest Rating First)</h3>
+                <div style="background: var(--dark); padding: 1rem; border-radius: 10px;">
+                    <ol style="margin-left: 1.5rem;">`;
+    
+    sorted.forEach((v, i) => {
+        html += `<li><strong>${v.name}</strong> - Rating: ⭐ ${v.rating} (${i === 0 ? '🏆 HIGHEST' : ''})</li>`;
+    });
+    
+    html += `
+                    </ol>
+                </div>
+            </div>
+            
+            <div style="margin-bottom: 1rem;">
+                <h3>⚙️ Algorithm Complexity</h3>
+                <div style="background: var(--dark); padding: 1rem; border-radius: 10px;">
+                    <p><strong>Insert Operation:</strong> O(log n) - Each vehicle inserted into heap</p>
+                    <p><strong>Extract Max:</strong> O(log n) - Removing highest rated vehicle</p>
+                    <p><strong>Heapify:</strong> O(n) - Building heap from array</p>
+                    <p><strong>Total Sorting:</strong> O(n log n) - Extracting all n vehicles</p>
+                </div>
+            </div>
+            
+            <div style="text-align: center; margin-top: 1rem;">
+                <button onclick="document.getElementById('heapModal').style.display='none'" class="btn-primary" style="background: var(--primary); color: var(--dark); padding: 0.7rem 1.5rem; border: none; border-radius: 40px; cursor: pointer;">Close</button>
+            </div>
+        </div>
+    `;
+    
+    // Create modal if not exists
+    let modal = document.getElementById('heapModal');
+    if (!modal) {
+        modal = document.createElement('div');
+        modal.id = 'heapModal';
+        modal.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1999; display: flex; align-items: center; justify-content: center;';
+        document.body.appendChild(modal);
+    }
+    modal.innerHTML = html;
+    modal.style.display = 'flex';
+    
+    // Close on click outside
+    modal.onclick = (e) => {
+        if (e.target === modal) modal.style.display = 'none';
+    };
+}
+
+// Add a button to show Max Heap visualization
+function addHeapButton() {
+    const gallerySection = document.getElementById('gallerySection');
+    if (gallerySection) {
+        const heapBtn = document.createElement('div');
+        heapBtn.style.cssText = 'text-align: center; margin-bottom: 1rem;';
+        heapBtn.innerHTML = `<button onclick="showMaxHeapVisualization()" style="background: transparent; border: 1px solid var(--primary); color: var(--primary); padding: 0.5rem 1.5rem; border-radius: 40px; cursor: pointer; margin-top: 0.5rem;"><i class="fas fa-chart-line"></i> Show Max Heap Ranking Algorithm</button>`;
+        const searchContainer = document.querySelector('.search-container');
+        if (searchContainer) {
+            searchContainer.appendChild(heapBtn);
+        }
+    }
+}
+
+// Call this when page loads
+document.addEventListener('DOMContentLoaded', () => {
+    // ... existing code ...
+    addHeapButton();
+});
+</script>
+<footer><p>© 2025 Ghoomney. All rights reserved.</p></footer>
+</body>
+</html>
